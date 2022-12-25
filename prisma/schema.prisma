@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  userId         String   @id @default(uuid())
+  username       String   @unique
+  email          String   @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  hashedPassword String
+  dpUrl          String?
+  isVerified     Boolean  @default(false)
+  isPublic       Boolean  @default(true)
+
+  posts      Post[]
+  PostLike   PostLike[]
+  followedBy UserFollow[] @relation("followed")
+  following  UserFollow[] @relation("follower")
+}
+
+model Post {
+  postId    String   @id @default(uuid())
+  content   String
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  isRepost  Boolean  @default(false)
+  createdBy String
+  parentId  String?
+
+  parentPost Post?      @relation("ReplyPosts", fields: [parentId], references: [postId])
+  childPosts Post[]     @relation("ReplyPosts")
+  user       User       @relation(fields: [createdBy], references: [userId])
+  PostLike   PostLike[]
+}
+
+model PostLike {
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [userId])
+  post Post @relation(fields: [postId], references: [postId])
+
+  @@id([userId, postId])
+}
+
+model UserFollow {
+  userId    String
+  followId  String
+  createdAt DateTime @default(now())
+
+  user       User @relation("follower", fields: [userId], references: [userId])
+  followUser User @relation("followed", fields: [followId], references: [userId])
+
+  @@id([userId, followId])
+}
