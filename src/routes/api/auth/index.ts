@@ -1,15 +1,12 @@
 import { FastifyPluginAsync } from 'fastify';
-
-const registerSchema = {
-  response: {},
-};
+import { reigsterSchema } from '../../../schemas/auth';
 
 const registerHandler = async (request: any, reply: any) => {
   return { test: 'lol' };
 };
 
 const userAuth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
-  fastify.get('/register', { schema: registerSchema }, registerHandler);
+  fastify.post('/register', { schema: reigsterSchema }, registerHandler);
 };
 
 export default userAuth;
