@@ -1,7 +1,7 @@
 import { Prisma, PrismaClient, User } from '@prisma/client';
 import { FastifyInstance } from 'fastify';
 
-export const createNewUser = async (fastify: FastifyInstance, prisma: PrismaClient, data: any): Promise<User> => {
+export const createUser = async (fastify: FastifyInstance, prisma: PrismaClient, data: any): Promise<User> => {
   let newUser: User;
   try {
     newUser = await prisma.user.create({

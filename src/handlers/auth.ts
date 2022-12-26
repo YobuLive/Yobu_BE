@@ -1,14 +1,17 @@
 import { User } from '@prisma/client';
-import { createNewUser } from '../db/auth';
+import { createUser } from '../db/auth';
+import { RegisterUserOut } from '../dto/auth';
+import { hashPassword } from '../util/auth';
 
-export const registerHandler = async (request: any, reply: any) => {
+export const registerUserHandler = async (request: any, reply: any): Promise<RegisterUserOut> => {
   const { username, email, password } = request.body;
-  const newUser: User = await createNewUser(request.server, request.server.prisma, {
+  const hashedPassword: string = await hashPassword(password);
+  const newUser: User = await createUser(request.server, request.server.prisma, {
     username,
     email,
-    hashedPassword: password,
+    hashedPassword,
   });
-  const result = {
+  const result: RegisterUserOut = {
     userId: newUser.userId,
     username: newUser.username,
     email: newUser.email,
@@ -17,3 +20,5 @@ export const registerHandler = async (request: any, reply: any) => {
   };
   return result;
 };
+
+export const loginUserByEmailHandler = async (request: any, reply: any) => {};

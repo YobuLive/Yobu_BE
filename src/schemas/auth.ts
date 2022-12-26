@@ -1,5 +1,33 @@
 import { FastifySchema } from 'fastify';
 
+export const loginByUsernameSchema: FastifySchema = {
+  body: {
+    type: 'object',
+    properties: {
+      username: {
+        type: 'string',
+      },
+      password: {
+        type: 'string',
+      },
+    },
+  },
+};
+
+export const loginByEmailSchema: FastifySchema = {
+  body: {
+    type: 'object',
+    properties: {
+      username: {
+        type: 'string',
+      },
+      password: {
+        type: 'string',
+      },
+    },
+  },
+};
+
 export const reigsterSchema: FastifySchema = {
   body: {
     type: 'object',
